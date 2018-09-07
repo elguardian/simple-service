@@ -21,7 +21,7 @@ import org.kie.api.runtime.process.WorkItemManager;
 
 public class ServiceHandler extends AbstractWorkItemHandler {
 
-	private static Map<Long, Thread> threads = new ConcurrentHashMap<>();
+	private Map<Long, Thread> threads = new ConcurrentHashMap<>();
 
 	public ServiceHandler(KieSession ksession) {
 		super(ksession);
