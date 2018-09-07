@@ -36,6 +36,12 @@
 		</dependency>
 		<dependency>
 			<groupId>org.jbpm</groupId>
+			<artifactId>jbpm-executor</artifactId>
+			<version>${drools-version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jbpm</groupId>
 			<artifactId>jbpm-workitems-core</artifactId>
 			<version>${drools-version}</version>
 			<scope>provided</scope>

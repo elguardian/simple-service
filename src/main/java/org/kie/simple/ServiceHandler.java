@@ -2,6 +2,7 @@ package org.kie.simple;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.drools.core.process.instance.impl.WorkItemImpl;
 import org.jbpm.process.workitem.core.AbstractWorkItemHandler;
@@ -20,11 +21,10 @@ import org.kie.api.runtime.process.WorkItemManager;
 
 public class ServiceHandler extends AbstractWorkItemHandler {
 
-	private Map<Long, Thread> threads;
+	private static Map<Long, Thread> threads = new ConcurrentHashMap<>();
 
 	public ServiceHandler(KieSession ksession) {
 		super(ksession);
-		threads = new HashMap<>();
 	}
 
 	public void executeWorkItem(WorkItem workItem, WorkItemManager manager) {
@@ -53,9 +53,12 @@ public class ServiceHandler extends AbstractWorkItemHandler {
 
 	public void abortWorkItem(WorkItem workItem, WorkItemManager manager) {
 		System.out.println("CANCELLING WORKITEM " + workItem.getId());
-		// stop the work
-		threads.remove(workItem.getId()).interrupt();
-		manager.abortWorkItem(workItem.getId());
+		Thread thread = threads.remove(workItem.getId());
+		if(thread != null) {
+			thread.interrupt();
+		} else {
+			System.out.println("thread not found for this workitem " + workItem.getId());
+		}
 	}
 
 }

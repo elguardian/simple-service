@@ -24,7 +24,7 @@ public class ServiceJobWorker implements Runnable {
 	public void run() {			
 		System.out.println("process started: "  + slaInfo.getWorkItemId());
 		try {
-			Thread.sleep(15000);
+			Thread.sleep(25000);
 			
 			// do some work
 			Map<String, Object> output = new HashMap<>();
@@ -44,11 +44,9 @@ public class ServiceJobWorker implements Runnable {
 		if (rtm != null) {
 			RuntimeEngine engine = rtm.getRuntimeEngine(ProcessInstanceIdContext.get(slaInfo.getProcessId()));
 			engine.getKieSession().getWorkItemManager().completeWorkItem(slaInfo.getWorkItemId(), output);
-			engine.getKieSession().signalEvent("workItemEnded", null);
 			rtm.disposeRuntimeEngine(engine);
 		} else {
 			ksession.getWorkItemManager().completeWorkItem(slaInfo.getWorkItemId(), output);
-			ksession.signalEvent("workItemEnded", null);
 		}
 	}
 	

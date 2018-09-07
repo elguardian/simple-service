@@ -21,8 +21,10 @@ public class SLAViolationHandler extends DefaultProcessEventListener {
 
 	private Optional<SLAInfo> getSLAInfo(SLAViolatedEvent event) {
 
+		
 		if (event != null && event.getProcessInstance() != null && event.getNodeInstance() != null) {
-			Object obj = ((WorkflowProcessInstance) event.getProcessInstance()).getVariable("	");
+			Object obj = ((WorkflowProcessInstance) event.getProcessInstance()).getVariable("slaMap");
+			
 			Long procInstId = event.getProcessInstance().getId();
 			Long nodeInstId = event.getNodeInstance().getId();
 			if (obj != null && obj instanceof Map) {
@@ -30,7 +32,6 @@ public class SLAViolationHandler extends DefaultProcessEventListener {
 				Map<String, Object> slaMap = (Map<String, Object>) obj;
 				String key = SLAInfo.generateKey(procInstId, nodeInstId);
 				Object innerObj = slaMap.get(key);
-
 				if (innerObj != null && innerObj instanceof SLAInfo) {
 					return Optional.of((SLAInfo) innerObj);
 				}
@@ -54,13 +55,15 @@ public class SLAViolationHandler extends DefaultProcessEventListener {
 			System.out.println("didn't get the SLAInfo");
 			return;
 		}
+		
 
 		SLAInfo slaInfo = info.get();
 		System.out.println("***** SLA Violated Action ***** NODE: " + event.getNodeInstance().getNodeName() + " ACTION "
 				+ slaInfo.getAction());
 
-		nii.cancel();
+		
 		event.getKieRuntime().signalEvent(slaInfo.getRetrySignalName(), slaInfo);
+		nii.cancel();
 		System.out.println("***************");
 
 	}
