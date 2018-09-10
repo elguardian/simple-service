@@ -27,8 +27,10 @@ public class SLAViolationHandler extends DefaultProcessEventListener {
 		WorkItemNodeInstance nii = (WorkItemNodeInstance) event.getNodeInstance();
 
 		
-		event.getKieRuntime().signalEvent("sla_violation", nii.getWorkItemId());
+		event.getProcessInstance().signalEvent("sla_violation", nii.getWorkItemId());
+//		nii.signalEvent("sla_violation",  nii.getWorkItemId());
 		nii.cancel();
+
 		System.out.println("***************");
 
 	}
